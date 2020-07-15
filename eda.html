@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Explanatory Data Analysis</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Happiness in the Tidyverse</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="setup.html">Setup</a>
+</li>
+<li>
+  <a href="data.html">Data</a>
+</li>
+<li>
+  <a href="dataClean.html">Data Clean</a>
+</li>
+<li>
+  <a href="eda.html">EDA</a>
+</li>
+<li>
+  <a href="tests.html">Tests</a>
+</li>
+<li>
+  <a href="results.html">Results</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Explanatory Data Analysis</h1>
+
+</div>
+
+
+<div id="mo-money-mo-problems" class="section level1">
+<h1><strong><em>Mo Money, Mo Problems</em></strong></h1>
+<p>Rappers may have 99 problems, but money certainly isn’t one of them. Sadly, despite all this they claim that more money brings more problems. Is this true? We will (try) to answer this question with the happiness data, the tidyverse way of course.</p>
+<p>Best way to spot relationships is through visualisations. We will used the much loved ggplot2 package, installed with the tidyverse. Strictly speaking, ggplot2 is not part of the tidyverse, since it is not built around the same grammar, code flow (e.g. piping) and emphasis on readability as the rest of the tidyverse. Hadley implicitly admits this <a href="https://community.rstudio.com/t/why-cant-ggplot2-use/4372/7">here</a>, stating why ggplot2 doesn’t and shouldn’t use <code>magrittr</code> pipes, which is a key feature of the tidyverse.</p>
+<p>Ok, we are being pedantic, nonetheless, ggplot2 comes with the tidyverse, so we shall carry on.</p>
+<p>To answer our question, we will try to see if happiness increases or decreases with gdp per capita.</p>
+<pre class="r"><code>Plot &lt;- nestedData[[2]][[1]] %&gt;%
+ggplot(aes(x = `Economy (GDP per Capita)`, y = `Happiness Score`))+
+  geom_point(color = &quot;#4da734&quot;)+
+  geom_smooth(method = &quot;lm&quot;)+
+  theme_minimal()</code></pre>
+<p>Firstly, we begin by creating a plot. This is a simple scatter plot with a line of best fit going through the points. We don’t output the plot to the console however. The reason for this is because the quality of the plot is compromised with that approach. Sadly, the default resolution in Rstudio is 72 ppi. We can increase this with the <code>png()</code> function by specifying the resolution when exporting the plot as an image.</p>
+<pre class="r"><code>outfile &lt;- &quot;moneyChart.png&quot;
+
+png(outfile, width = 400*8, height = 220*8, res = 72*8)
+print(Plot)
+dev.off()</code></pre>
+<p>This saves a high resolution of the plot. Credit where credit is due, this answer is adapted from <a href="https://stackoverflow.com/a/51432001/9778946">this</a> excellent answer on Stackoverflow. This is a real gem, genuine game changer. The original answer was used in a shiny context, but works in markdown too. Without this, you can barely see the plot.</p>
+<div class="figure">
+<img src="moneyChart.png" alt="Relationship between Happiness and GDP per capita" width="900" height="550" />
+<p class="caption">
+Relationship between Happiness and GDP per capita
+</p>
+</div>
+<p>Well, well, well will you look at that! Looks like money really does buy happiness. Happiness linearly increases as gdp per capita increase, which seems to mean that higher income increases happiness.</p>
+<p>Is this <em>really</em> true? We can’t say for sure until we perform formal tests, especially ones with control variables. That’s to come, let’s continue exploring the dataset.</p>
+</div>
+<div id="because-im-happy" class="section level1">
+<h1><strong><em>Because I’m happy</em></strong></h1>
+<p>Now that we’ve seen that money buys happiness, who are the happiest countries in the world anyway?</p>
+<pre class="r"><code>happyData &lt;- nestedData[[2]][[2]] %&gt;%
+  select(Region, contains(&quot;Score&quot;))
+
+sample_size &lt;- happyData %&gt;%
+  group_by(Region) %&gt;%
+  summarize(num=n())
+
+happyPlot &lt;- happyData %&gt;%
+  left_join(sample_size) %&gt;%
+  mutate(myaxis = paste0(Region, &quot;\n&quot;, &quot;n=&quot;, num)) %&gt;%
+  ggplot( aes(x=myaxis, y=`Happiness Score`, fill=Region)) +
+  geom_violin(width=1.4) +
+  geom_boxplot(width=0.1, color=&quot;grey&quot;, alpha=0.2) +
+  scale_fill_viridis(discrete = TRUE) +
+  theme_ipsum() +
+  theme(
+    legend.position=&quot;none&quot;,
+    plot.title = element_text(size=11),
+    axis.text.x = element_text(size = 5, angle = 60, hjust = 1),
+    plot.margin = margin(2,2,-1,2)
+  ) +
+  xlab(&quot;&quot;)</code></pre>
+<div class="figure">
+<img src="happyGraph.png" alt="Violin wrapped boxplot of happiness per region" width="900" height="630" />
+<p class="caption">
+Violin wrapped boxplot of happiness per region
+</p>
+</div>
+<p>Looks like countries in Western Europe are the happiest countries in the world. The poorest countries in the word are from sub-saharan Africa. These are the wealthiest and poorest regions in the world respectively. This graph seems to suggest that happiness is correlated to economy. What else is happiness correlated to? Let’s find out.</p>
+</div>
+<div id="happy-relationships" class="section level1">
+<h1><strong><em>Happy Relationships</em></strong></h1>
+<p>If we examined the relationships between variables individually through the years, we’ll be here all day. A quick way to do this is a correlation heat map. This will show us which variables happiness is most correlated to. This might suggest possible relationships to test formally.</p>
+<pre class="r"><code>corr &lt;- nestedData[[2]][[3]] %&gt;%
+  select_if(., str_detect(., &quot;[0-9]&quot;)) %&gt;%
+  cor() %&gt;%
+  round(., 1)
+
+corrPlot &lt;- ggcorrplot(corr, hc.order = TRUE, 
+           type = &quot;lower&quot;, 
+           lab = TRUE, 
+           lab_size = 3, 
+           colors = c(&quot;tomato2&quot;, &quot;white&quot;, &quot;springgreen3&quot;), 
+           ggtheme=theme_bw,
+           tl.cex = 4)</code></pre>
+<div class="figure">
+<img src="corrPlot.png" alt="Correlation matrix" width="900" height="650" />
+<p class="caption">
+Correlation matrix
+</p>
+</div>
+<p>Looks like happiness is strongly correlated with economy, family and life expectancy. Looks like we finally have a hypothesis to test. So let us proceed.</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

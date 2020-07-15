@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Cleaning, Manipulating and Transforming Data</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Happiness in the Tidyverse</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="setup.html">Setup</a>
+</li>
+<li>
+  <a href="data.html">Data</a>
+</li>
+<li>
+  <a href="dataClean.html">Data Clean</a>
+</li>
+<li>
+  <a href="eda.html">EDA</a>
+</li>
+<li>
+  <a href="tests.html">Tests</a>
+</li>
+<li>
+  <a href="results.html">Results</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Cleaning, Manipulating and Transforming Data</h1>
+
+</div>
+
+
+<p>Now that the data has been loaded into R, we proceed with cleaning and transforming the data.</p>
+<pre class="r"><code>nestedData &lt;- happiness %&gt;% 
+  group_by(filename) %&gt;%
+  nest()</code></pre>
+<p>We use the <code>nest</code> function from <code>tidyr</code>, another tidyverse package. The function is quite nice, as it is well suited for this use case, where the data needs to be split. What this does is creates five dataframes, nested in one, similar to how lists work. The dataframe is split by the <code>filename</code> column, which shows the importance of the earlier step that coded the extra column in.</p>
+<pre class="nestedStructure"><code># A tibble: 5 x 2
+# Groups:   filename [5]
+  filename data               
+  &lt;chr&gt;    &lt;list&gt;             
+1 2015     &lt;tibble [158 x 30]&gt;
+2 2016     &lt;tibble [157 x 30]&gt;
+3 2017     &lt;tibble [155 x 30]&gt;
+4 2018     &lt;tibble [156 x 30]&gt;
+5 2019     &lt;tibble [156 x 30]&gt;</code></pre>
+<p>The console output above shows the structure of nested data. The filename column contains the name of the data and the data column contains, well the data. Very intuitive structure, yay tidyverse :)</p>
+<pre class="r"><code>set.seed(123)
+clmns &lt;- c(1,sample(2:ncol(nestedData[[2]][[1]]), 4, replace = FALSE))
+
+nestedData[[2]][[1]] %&gt;% 
+  select(clmns) %&gt;%
+  slice(., -5:-n()) %&gt;%
+  kable()</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Country
+</th>
+<th style="text-align:left;">
+Happiness.Score
+</th>
+<th style="text-align:left;">
+Health..Life.Expectancy.
+</th>
+<th style="text-align:left;">
+Happiness.Rank
+</th>
+<th style="text-align:left;">
+Happiness Score
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Switzerland
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+7.587
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Iceland
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+7.561
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Denmark
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+7.527
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Norway
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+7.522
+</td>
+</tr>
+</tbody>
+</table>
+<p>Accessing data from a nested dataframe is quite similar to accessing data from a list, as shown above. First index to select is 2, since the nesting will always place the data in the second column. Then we use 1 for the 2015 data, which comes first.</p>
+<div id="pimp-clean-my-data" class="section level1">
+<h1><strong><em><del>Pimp</del> Clean My Data</em></strong></h1>
+<pre class="r"><code>nestedData[[2]] &lt;-  nestedData[[2]] %&gt;% 
+  map(., function(x) purrr::discard(x, colSums(is.na(x))==nrow(x)))</code></pre>
+<p>From the output table, we can see that column has <code>NA</code> values in the first five rows. Maybe the entire column has NAs. We need to drop columns that have all <code>NA</code> values.</p>
+<p>What if the different data frames have different columns that have <code>NA</code> values? Not an issue. Recall that the data in the second column of the nested data frame is just a list of dataframes. As a result, we can loop through the second column just like we can a list.</p>
+<p>We use the <code>map</code> function from <code>tidyr</code>, which is the tidyverse version of <code>lapply</code>, and works exactly like <code>lapply</code>. The <code>map</code> function returns a list (as does <code>lapply</code>), so we can replace the list of dataframes in the data column of our nested data.</p>
+<pre class="nestedStructure"><code># A tibble: 5 x 2
+# Groups:   filename [5]
+  filename data               
+  &lt;chr&gt;    &lt;list&gt;             
+1 2015     &lt;tibble [158 x 12]&gt;
+2 2016     &lt;tibble [157 x 13]&gt;
+3 2017     &lt;tibble [155 x 12]&gt;
+4 2018     &lt;tibble [156 x 9]&gt; 
+5 2019     &lt;tibble [156 x 9]&gt; </code></pre>
+<p>Next thing to do is convert columns to numeric</p>
+<pre class="r"><code>charToNum &lt;- function(x) {
+  
+  numCharCols &lt;- which(str_detect(x, &quot;[0-9]&quot;)==TRUE)
+  
+  temp &lt;- unnest(x, cols = c())
+  
+  temp[,numCharCols] &lt;- map_df(temp[,numCharCols], as.numeric)
+  
+  return(temp)
+  
+}
+
+nestedData[[2]] &lt;- nestedData[[2]] %&gt;%
+  map(., charToNum) </code></pre>
+<p>When the data was loaded, all columns were read in as character columns to increase speed and robustness. However, the columns need to be of numeric type for econometric modeling and data visualisation, so the columns need to be transformed into numeric.</p>
+<p><em>However</em>, doing this with nested data is non trivial. The first problem is the nested data frames do not have the same number of numeric columns. For instance, dataframe 1 has two columns as text and the rest as number, while the fifth only one the one column as text. To compound the problem, these columns are in different positions in each dataframe.</p>
+<p>The second problem is the stock nested structure. Recall again that the data column is a <strong>list</strong>. The function <code>as.numeric</code> cannot be directly lost on a list. Unlisting is not option, since this does not preserve the data frame structure. What is needed therefore is essentially two for loops, one to iterate over the list and the second to iterate over the columns in the list.</p>
+<p>This is what the code chunk above achieves. Within the function, we use <code>str_detect</code> from <code>stringr</code> (another tidyverse package of course) to check which columns only have numbers. Note that still works even though the columns are strings.</p>
+<p>Then we unnest the list to create a data frame. Now we use <code>map_df</code> (tidyverse version of <code>sapply</code>, since it returns a dataframe like <code>sapply</code>) to iterate over each column in the dataframe, since a dataframe is really a list, as.numeric(x) does not work as x must be a vector not a list, hence the loop over a list. We only apply as.numeric over columns that have numbers.</p>
+<p>Now the second line applies the function over the list. It’s a bit difficult to conceptualise, but this is essentially a nested for loop. Working backwards from the bottom, <code>map</code> goes through each data frame in the list, then the second <code>map_df</code> iterates through each vector in the list of vectors, which is in essence what all a dataframe really is. <code>map_df</code> returns a dataframe, <code>map</code> returns a list.</p>
+<p>Has it worked? Let’s see:</p>
+<pre class="r"><code>test &lt;- map_df(nestedData[[2]][[1]], class)
+kable(test[,1:10])</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Country
+</th>
+<th style="text-align:left;">
+Region
+</th>
+<th style="text-align:left;">
+Happiness Rank
+</th>
+<th style="text-align:left;">
+Happiness Score
+</th>
+<th style="text-align:left;">
+Standard Error
+</th>
+<th style="text-align:left;">
+Economy (GDP per Capita)
+</th>
+<th style="text-align:left;">
+Family
+</th>
+<th style="text-align:left;">
+Health (Life Expectancy)
+</th>
+<th style="text-align:left;">
+Freedom
+</th>
+<th style="text-align:left;">
+Trust (Government Corruption)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+character
+</td>
+<td style="text-align:left;">
+character
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>test &lt;- map_df(nestedData[[2]][[5]], class)
+kable(test)</code></pre>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Generosity
+</th>
+<th style="text-align:left;">
+Overall rank
+</th>
+<th style="text-align:left;">
+Country or region
+</th>
+<th style="text-align:left;">
+Score
+</th>
+<th style="text-align:left;">
+GDP per capita
+</th>
+<th style="text-align:left;">
+Social support
+</th>
+<th style="text-align:left;">
+Healthy life expectancy
+</th>
+<th style="text-align:left;">
+Freedom to make life choices
+</th>
+<th style="text-align:left;">
+Perceptions of corruption
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+character
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+<td style="text-align:left;">
+numeric
+</td>
+</tr>
+</tbody>
+</table>
+<p>The next step from here is to change the columns that have the same columns but different names. This is difficult to do in one line on nested data with different number of columns and also the columns have different positions.</p>
+<pre class="r"><code>multi_str_detect &lt;- function(df) {
+  
+  val &lt;- df %&gt;%
+    colnames(.) %&gt;%
+    str_detect(fixed(&quot;Score&quot;, ignore_case = TRUE)) %&gt;%
+    which(.==T)
+  
+  val &lt;- df %&gt;%
+    colnames(.) %&gt;%
+    str_detect(fixed(&quot;Freedom&quot;, ignore_case = TRUE)) %&gt;%
+    which(.==T) %&gt;%
+    c(., val)
+  
+  val &lt;- df %&gt;%
+    colnames(.) %&gt;%
+    str_detect(fixed(&quot;Expectancy&quot;, ignore_case=TRUE)) %&gt;%
+    which(.==T) %&gt;%
+    c(., val)
+  
+  val &lt;- df %&gt;%
+    colnames(.) %&gt;%
+    str_detect(fixed(&quot;Country&quot;, ignore_case = TRUE)) %&gt;%
+    which(.==T) %&gt;%
+    c(., val)  
+    
+  res &lt;- df %&gt;%
+    colnames(.) %&gt;%
+    str_detect(fixed(&quot;GDP&quot;, ignore_case = TRUE)) 
+
+  res[val] &lt;- TRUE
+  
+  return(res)
+  
+}
+
+newNames &lt;- function(x, pattern, new_names) {
+  
+  x[str_detect(x, fixed(&quot;Score&quot;, ignore_case = TRUE))] &lt;- &quot;Score&quot;
+  x[str_detect(x, fixed(&quot;GDP&quot;, ignore_case = TRUE))] &lt;- &quot;gdpPerCapita&quot;
+  x[str_detect(x, fixed(&quot;Freedom&quot;, ignore_case = TRUE))] &lt;- &quot;Freedom&quot;
+  x[str_detect(x, fixed(&quot;expectancy&quot;, ignore_case = TRUE))] &lt;- &quot;LifeExp&quot;
+  x[str_detect(x, fixed(&quot;Country&quot;, ignore_case = TRUE))] &lt;- &quot;Country&quot;
+  
+  return(x)
+
+}</code></pre>
+<p>We have to pause here and concede. We have hardcoded the variables we want changed, which is bad practice, <strong>very</strong> bad practice. Ideally, it should be vectorised, with the user passing a list of new names and patterns to match. However, it can be different to grasp the level of abstraction required to achieve this.</p>
+<pre class="r"><code>nestedData[[2]] &lt;- map(nestedData[[2]], function(x) x %&lt;&gt;% rename_if(., multi_str_detect(.), newNames)
+)</code></pre>
+<p>We use the <code>%&lt;&gt;%</code> function from <code>magrittr</code>, which pipes data into an operation then performs a left assign. We use the <code>rename_if</code> function to change the names of the columns. The beauty of this function, unlike select, which can also be used to rename columns, is that it keeps the columns not specified. The <code>rename_if</code> function takes a <code>.predicate</code> argument that evaluates to <code>TRUE</code> or <code>FALSE</code> in order to select the functions for renaming. This is why we created a custom function <code>multi_str_detect</code> that returns a vector of <code>TRUE</code> and <code>FALSE</code>.</p>
+<p>Ideally, the <code>str_detect</code> function should have been used here, but we’ve had trouble getting it to work with more than one pattern. This is because it returns a vector that is not the same length as the number of columns, which is a must for the <code>.predicate</code>. For example, with the five names of columns we want change, it will return a five length vector, all stating to be <code>TRUE</code>, rather than a vector that is the same length as the column but with <code>FALSE</code> everywhere else. We admit that the function is not the best and we are open to suggestions on how to improve it. Well, that’s what happens when you spend all your time on learning the tidyverse, your base R skills suffer. Sometimes it feels the tidyverse is really a different language from R.</p>
+<pre class="r"><code>names(nestedData[[2]][[3]])</code></pre>
+<pre><code> [1] &quot;Country&quot;                       &quot;Family&quot;                       
+ [3] &quot;Freedom&quot;                       &quot;Generosity&quot;                   
+ [5] &quot;Happiness.Rank&quot;                &quot;Score&quot;                        
+ [7] &quot;Whisker.high&quot;                  &quot;Whisker.low&quot;                  
+ [9] &quot;gdpPerCapita&quot;                  &quot;LifeExp&quot;                      
+[11] &quot;Trust..Government.Corruption.&quot; &quot;Dystopia.Residual&quot;            </code></pre>
+<p>Phew! The tidyverse remains undefeated, for now!!!</p>
+<p>We can now proceed with exploring the dataset, at long last!</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

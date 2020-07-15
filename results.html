@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Hypothesis Confirmation</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Happiness in the Tidyverse</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="setup.html">Setup</a>
+</li>
+<li>
+  <a href="data.html">Data</a>
+</li>
+<li>
+  <a href="dataClean.html">Data Clean</a>
+</li>
+<li>
+  <a href="eda.html">EDA</a>
+</li>
+<li>
+  <a href="tests.html">Tests</a>
+</li>
+<li>
+  <a href="results.html">Results</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Hypothesis Confirmation</h1>
+
+</div>
+
+
+<div id="time-happy-is-money" class="section level1">
+<h1><strong><em><del>Time</del> Happy is Money</em></strong></h1>
+<p>Now we finally get to the answer the age old question, does money buy happiness? The code chunk below shows the <code>stargazer</code> function from the stargazer package. We use this function to display results from the regression. The beauty of this function is that it captures the summary output of the regression and creates an HTML table, which it then styles into publication quality table.</p>
+<pre class="r"><code>stargazer(nestedData[[3]], type = &quot;html&quot;, style = &quot;qje&quot;, dep.var.labels = &quot;GDP per capital&quot;, column.labels = c(&quot;2015&quot;, &quot;2016&quot;, &quot;2017&quot;, &quot;2018&quot;, &quot;2019&quot;))</code></pre>
+<p>As you can see from the table below, the answer is a resounding YES!!!! All years have a statistically significant coefficient on GDP per capita. The coefficient is statistically significant at the 1% for all three coefficients. The positive coefficient coefficient shows that an increase in GDP per capita increases the happiness score of the country. So yes, money does buy happiness.</p>
+<table style="text-align:center">
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="5">
+Happiness Score
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+2015
+</td>
+<td>
+2016
+</td>
+<td>
+2017
+</td>
+<td>
+2018
+</td>
+<td>
+2019
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+<td>
+(3)
+</td>
+<td>
+(4)
+</td>
+<td>
+(5)
+</td>
+</tr>
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+gdpPerCapita
+</td>
+<td>
+2.218<sup>***</sup>
+</td>
+<td>
+2.187<sup>***</sup>
+</td>
+<td>
+2.184<sup>***</sup>
+</td>
+<td>
+2.291<sup>***</sup>
+</td>
+<td>
+2.218<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.142)
+</td>
+<td>
+(0.136)
+</td>
+<td>
+(0.127)
+</td>
+<td>
+(0.137)
+</td>
+<td>
+(0.137)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+3.499<sup>***</sup>
+</td>
+<td>
+3.296<sup>***</sup>
+</td>
+<td>
+3.203<sup>***</sup>
+</td>
+<td>
+3.333<sup>***</sup>
+</td>
+<td>
+3.399<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.133)
+</td>
+<td>
+(0.141)
+</td>
+<td>
+(0.136)
+</td>
+<td>
+(0.134)
+</td>
+<td>
+(0.135)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>N</em>
+</td>
+<td>
+158
+</td>
+<td>
+157
+</td>
+<td>
+155
+</td>
+<td>
+156
+</td>
+<td>
+156
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.610
+</td>
+<td>
+0.625
+</td>
+<td>
+0.660
+</td>
+<td>
+0.643
+</td>
+<td>
+0.630
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.607
+</td>
+<td>
+0.622
+</td>
+<td>
+0.658
+</td>
+<td>
+0.641
+</td>
+<td>
+0.628
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+0.717 (df = 156)
+</td>
+<td>
+0.702 (df = 155)
+</td>
+<td>
+0.662 (df = 153)
+</td>
+<td>
+0.671 (df = 154)
+</td>
+<td>
+0.679 (df = 154)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+F Statistic
+</td>
+<td>
+243.905<sup>***</sup> (df = 1; 156)
+</td>
+<td>
+257.903<sup>***</sup> (df = 1; 155)
+</td>
+<td>
+297.140<sup>***</sup> (df = 1; 153)
+</td>
+<td>
+277.860<sup>***</sup> (df = 1; 154)
+</td>
+<td>
+262.498<sup>***</sup> (df = 1; 154)
+</td>
+</tr>
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Notes:</em>
+</td>
+<td colspan="5" style="text-align:right">
+<sup>***</sup>Significant at the 1 percent level.
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="5" style="text-align:right">
+<sup>**</sup>Significant at the 5 percent level.
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="5" style="text-align:right">
+<sup>*</sup>Significant at the 10 percent level.
+</td>
+</tr>
+</table>
+<p><br></p>
+</div>
+<div id="pursuit-of-happiness" class="section level1">
+<h1><strong><em>Pursuit of Happiness</em></strong></h1>
+<p>The table below shows the results of the regression of happiness and freedom. The relationship between freedom and happiness is even stronger than GDP per capita. This makes sense intuitively, people who are free to pursue their own desires are more likely to be free. Hence, the famous from the American Declaration of Independence.</p>
+<pre class="r"><code>stargazer(nestedData[[4]], type = &quot;html&quot;, style = &quot;qje&quot;, dep.var.labels = &quot;Happiness Score&quot;, column.labels = c(&quot;2015&quot;, &quot;2016&quot;, &quot;2017&quot;, &quot;2018&quot;, &quot;2019&quot;))</code></pre>
+<table style="text-align:center">
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="5">
+Happiness Score
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+2015
+</td>
+<td>
+2016
+</td>
+<td>
+2017
+</td>
+<td>
+2018
+</td>
+<td>
+2019
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+<td>
+(3)
+</td>
+<td>
+(4)
+</td>
+<td>
+(5)
+</td>
+</tr>
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Freedom
+</td>
+<td>
+4.317<sup>***</sup>
+</td>
+<td>
+4.447<sup>***</sup>
+</td>
+<td>
+4.300<sup>***</sup>
+</td>
+<td>
+3.751<sup>***</sup>
+</td>
+<td>
+4.403<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.501)
+</td>
+<td>
+(0.519)
+</td>
+<td>
+(0.501)
+</td>
+<td>
+(0.466)
+</td>
+<td>
+(0.516)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+3.525<sup>***</sup>
+</td>
+<td>
+3.732<sup>***</sup>
+</td>
+<td>
+3.596<sup>***</sup>
+</td>
+<td>
+3.671<sup>***</sup>
+</td>
+<td>
+3.679<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.227)
+</td>
+<td>
+(0.207)
+</td>
+<td>
+(0.218)
+</td>
+<td>
+(0.225)
+</td>
+<td>
+(0.215)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>N</em>
+</td>
+<td>
+158
+</td>
+<td>
+157
+</td>
+<td>
+155
+</td>
+<td>
+156
+</td>
+<td>
+156
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.323
+</td>
+<td>
+0.321
+</td>
+<td>
+0.325
+</td>
+<td>
+0.296
+</td>
+<td>
+0.321
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.319
+</td>
+<td>
+0.317
+</td>
+<td>
+0.321
+</td>
+<td>
+0.292
+</td>
+<td>
+0.317
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+0.945 (df = 156)
+</td>
+<td>
+0.944 (df = 155)
+</td>
+<td>
+0.932 (df = 153)
+</td>
+<td>
+0.942 (df = 154)
+</td>
+<td>
+0.920 (df = 154)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+F Statistic
+</td>
+<td>
+74.382<sup>***</sup> (df = 1; 156)
+</td>
+<td>
+73.375<sup>***</sup> (df = 1; 155)
+</td>
+<td>
+73.686<sup>***</sup> (df = 1; 153)
+</td>
+<td>
+64.825<sup>***</sup> (df = 1; 154)
+</td>
+<td>
+72.870<sup>***</sup> (df = 1; 154)
+</td>
+</tr>
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Notes:</em>
+</td>
+<td colspan="5" style="text-align:right">
+<sup>***</sup>Significant at the 1 percent level.
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="5" style="text-align:right">
+<sup>**</sup>Significant at the 5 percent level.
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="5" style="text-align:right">
+<sup>*</sup>Significant at the 10 percent level.
+</td>
+</tr>
+</table>
+<p><br></p>
+<p>The table below shows the results of life expectancy. Life expectancy is also statistically significant.</p>
+<pre class="r"><code>stargazer(nestedData[[5]], type = &quot;html&quot;, style = &quot;qje&quot;, dep.var.labels = &quot;Happiness Score&quot;, column.labels = c(&quot;2015&quot;, &quot;2016&quot;, &quot;2017&quot;, &quot;2018&quot;, &quot;2019&quot;))</code></pre>
+<table style="text-align:center">
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="5">
+Happiness Score
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+2015
+</td>
+<td>
+2016
+</td>
+<td>
+2017
+</td>
+<td>
+2018
+</td>
+<td>
+2019
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+<td>
+(3)
+</td>
+<td>
+(4)
+</td>
+<td>
+(5)
+</td>
+</tr>
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+LifeExp
+</td>
+<td>
+3.356<sup>***</sup>
+</td>
+<td>
+3.810<sup>***</sup>
+</td>
+<td>
+3.731<sup>***</sup>
+</td>
+<td>
+3.508<sup>***</sup>
+</td>
+<td>
+3.585<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.256)
+</td>
+<td>
+(0.257)
+</td>
+<td>
+(0.240)
+</td>
+<td>
+(0.230)
+</td>
+<td>
+(0.232)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+3.261<sup>***</sup>
+</td>
+<td>
+3.258<sup>***</sup>
+</td>
+<td>
+3.297<sup>***</sup>
+</td>
+<td>
+3.280<sup>***</sup>
+</td>
+<td>
+2.807<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.173)
+</td>
+<td>
+(0.155)
+</td>
+<td>
+(0.144)
+</td>
+<td>
+(0.149)
+</td>
+<td>
+(0.177)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>N</em>
+</td>
+<td>
+158
+</td>
+<td>
+157
+</td>
+<td>
+155
+</td>
+<td>
+156
+</td>
+<td>
+156
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.524
+</td>
+<td>
+0.586
+</td>
+<td>
+0.611
+</td>
+<td>
+0.602
+</td>
+<td>
+0.608
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.521
+</td>
+<td>
+0.583
+</td>
+<td>
+0.609
+</td>
+<td>
+0.599
+</td>
+<td>
+0.606
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+0.792 (df = 156)
+</td>
+<td>
+0.737 (df = 155)
+</td>
+<td>
+0.707 (df = 153)
+</td>
+<td>
+0.709 (df = 154)
+</td>
+<td>
+0.699 (df = 154)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+F Statistic
+</td>
+<td>
+172.052<sup>***</sup> (df = 1; 156)
+</td>
+<td>
+219.227<sup>***</sup> (df = 1; 155)
+</td>
+<td>
+240.768<sup>***</sup> (df = 1; 153)
+</td>
+<td>
+232.825<sup>***</sup> (df = 1; 154)
+</td>
+<td>
+239.075<sup>***</sup> (df = 1; 154)
+</td>
+</tr>
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Notes:</em>
+</td>
+<td colspan="5" style="text-align:right">
+<sup>***</sup>Significant at the 1 percent level.
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="5" style="text-align:right">
+<sup>**</sup>Significant at the 5 percent level.
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="5" style="text-align:right">
+<sup>*</sup>Significant at the 10 percent level.
+</td>
+</tr>
+</table>
+<p><br></p>
+<p>Finally we put them all together in one model. We can see that all variables remain statistically significant at the 1% model. This shows that wealth, freedom and health strongly influence the happiness.</p>
+<pre class="r"><code>stargazer(nestedData[[6]], type = &quot;html&quot;, style = &quot;qje&quot;, dep.var.labels = &quot;Happiness Score&quot;, column.labels = c(&quot;2015&quot;, &quot;2016&quot;, &quot;2017&quot;, &quot;2018&quot;, &quot;2019&quot;))</code></pre>
+<table style="text-align:center">
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="5">
+Happiness Score
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+2015
+</td>
+<td>
+2016
+</td>
+<td>
+2017
+</td>
+<td>
+2018
+</td>
+<td>
+2019
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(1)
+</td>
+<td>
+(2)
+</td>
+<td>
+(3)
+</td>
+<td>
+(4)
+</td>
+<td>
+(5)
+</td>
+</tr>
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+gdpPerCapita
+</td>
+<td>
+1.416<sup>***</sup>
+</td>
+<td>
+1.164<sup>***</sup>
+</td>
+<td>
+1.216<sup>***</sup>
+</td>
+<td>
+1.371<sup>***</sup>
+</td>
+<td>
+1.178<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.214)
+</td>
+<td>
+(0.209)
+</td>
+<td>
+(0.197)
+</td>
+<td>
+(0.216)
+</td>
+<td>
+(0.210)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Freedom
+</td>
+<td>
+2.352<sup>***</sup>
+</td>
+<td>
+2.428<sup>***</sup>
+</td>
+<td>
+2.257<sup>***</sup>
+</td>
+<td>
+1.997<sup>***</sup>
+</td>
+<td>
+2.199<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.355)
+</td>
+<td>
+(0.346)
+</td>
+<td>
+(0.318)
+</td>
+<td>
+(0.300)
+</td>
+<td>
+(0.349)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+LifeExp
+</td>
+<td>
+0.953<sup>***</sup>
+</td>
+<td>
+1.532<sup>***</sup>
+</td>
+<td>
+1.412<sup>***</sup>
+</td>
+<td>
+1.211<sup>***</sup>
+</td>
+<td>
+1.458<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.348)
+</td>
+<td>
+(0.374)
+</td>
+<td>
+(0.348)
+</td>
+<td>
+(0.346)
+</td>
+<td>
+(0.348)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+2.569<sup>***</sup>
+</td>
+<td>
+2.517<sup>***</sup>
+</td>
+<td>
+2.455<sup>***</sup>
+</td>
+<td>
+2.523<sup>***</sup>
+</td>
+<td>
+2.420<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.170)
+</td>
+<td>
+(0.150)
+</td>
+<td>
+(0.145)
+</td>
+<td>
+(0.152)
+</td>
+<td>
+(0.167)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>N</em>
+</td>
+<td>
+158
+</td>
+<td>
+157
+</td>
+<td>
+155
+</td>
+<td>
+156
+</td>
+<td>
+156
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+R<sup>2</sup>
+</td>
+<td>
+0.714
+</td>
+<td>
+0.743
+</td>
+<td>
+0.770
+</td>
+<td>
+0.750
+</td>
+<td>
+0.742
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Adjusted R<sup>2</sup>
+</td>
+<td>
+0.708
+</td>
+<td>
+0.738
+</td>
+<td>
+0.765
+</td>
+<td>
+0.745
+</td>
+<td>
+0.737
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Residual Std. Error
+</td>
+<td>
+0.618 (df = 154)
+</td>
+<td>
+0.584 (df = 153)
+</td>
+<td>
+0.548 (df = 151)
+</td>
+<td>
+0.565 (df = 152)
+</td>
+<td>
+0.570 (df = 152)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+F Statistic
+</td>
+<td>
+128.196<sup>***</sup> (df = 3; 154)
+</td>
+<td>
+147.719<sup>***</sup> (df = 3; 153)
+</td>
+<td>
+168.048<sup>***</sup> (df = 3; 151)
+</td>
+<td>
+152.210<sup>***</sup> (df = 3; 152)
+</td>
+<td>
+146.083<sup>***</sup> (df = 3; 152)
+</td>
+</tr>
+<tr>
+<td colspan="6" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Notes:</em>
+</td>
+<td colspan="5" style="text-align:right">
+<sup>***</sup>Significant at the 1 percent level.
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="5" style="text-align:right">
+<sup>**</sup>Significant at the 5 percent level.
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="5" style="text-align:right">
+<sup>*</sup>Significant at the 10 percent level.
+</td>
+</tr>
+</table>
+<p><br></p>
+</div>
+<div id="eat-drink-and-be-merry" class="section level1">
+<h1><strong><em>Eat, Drink and be Merry</em></strong></h1>
+<p>So we began with a simple question, and we have answered it sufficiently. The statistical tests are shallow, but that is intentional. The major focus of this project has been to showcase the power of the tidyverse. All the hardwork of getting tidy data (i.e: our nested data) paid off massively. This allowed us to streamline the regressions. Even displaying the results was a smooth process.</p>
+<p>We hope you found our project informative and interesting. Now you know what it takes to be happy. So go and be happy</p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
